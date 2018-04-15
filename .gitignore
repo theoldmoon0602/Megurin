@@ -1,0 +1,16 @@
+.dub
+docs.json
+__dummy.html
+docs/
+megurin.so
+megurin.dylib
+megurin.dll
+megurin.a
+megurin.lib
+megurin-test-*
+*.exe
+*.o
+*.obj
+*.lst
+tags
+/megurin
