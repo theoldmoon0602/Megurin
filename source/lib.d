@@ -240,6 +240,78 @@ class Game
       }
     }
 
+    /// 現時点でのチームの点数を返す
+    int get_score(Team team)
+      in
+      {
+        assert(team != Team.NO);
+      }
+    do
+    {
+      int score = 0;
+
+      // 取ったパネルの点数
+      foreach (y; 0..this.h_size) {
+        foreach (x; 0..this.w_size) {
+          if (this.owners[y][x] == team) {
+            score += this.panels[y][x];
+          }
+        }
+      }
+
+      // 囲んだ領域の点数
+      auto flags = new int[][](this.h_size, this.w_size);  // 0: 未探訪, 1: 探訪済み
+      auto dx = [0, -1, 1, 0];
+      auto dy = [-1, 0, 0, 1];
+
+      import std.range;
+      import std.math;
+      foreach (y; 0..this.h_size) {
+        foreach (x; 0..this.w_size) {
+          if (this.owners[y][x] == Team.NO && flags[y][x] == 0) {
+            int tmp_score = this.panels[y][x];
+            bool flag = true;  // falseになったら囲めてない
+            int[][] q = [];  // 探索予定場所のqueue
+            foreach (i; 0..4) {
+              q ~= [x + dx[i], y + dy[i]];
+            }
+
+            while (q.length > 0) {
+              auto p = q.front;
+              q.popFront();
+              auto x2 = p[0];
+              auto y2 = p[1];
+              if (x2 < 0 || this.w_size <= x2 || y2 < 0 || this.h_size <= y2) {
+                flag = false;
+                break;
+              }
+              if (flags[y2][x2] != 0) {
+                continue;
+              }
+              flags[y2][x2] = 1;
+
+              if (this.owners[y2][x2] == team) {
+                continue;
+              }
+              else {
+                tmp_score += abs(this.panels[y2][x2]);
+              }
+
+              foreach (i; 0..4) {
+                q ~= [x2 + dx[i], y2 + dy[i]];
+              }
+            }
+            if (flag) {
+              score += tmp_score;
+            }
+
+          }
+        }
+      }
+      return score;
+    }
+
+
     import std.json;
     /// 現在の状態をすべてJSONにして返す
     JSONValue get_status_json()
