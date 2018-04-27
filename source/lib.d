@@ -30,6 +30,7 @@ class Agent
 
 enum ActionName
 {
+  Invalid,
   Move,
   Remove,
 }
@@ -65,6 +66,7 @@ class Game
     int[][] panels;  /// 実際のパネルたち  
     Team[][] owners;  /// パネルの所有権を表す
     Agent[] agents;  /// 高専生
+    uint turn;  /// 経過ターン数
 
     this(uint w_size, uint h_size)
       in
@@ -80,6 +82,8 @@ class Game
       this.panels = new int[][](h_size, w_size);
       this.owners = new Team[][](h_size, w_size);
       this.agents = [];
+
+      this.turn = 0;
     }
 
     /// パネルの点数を初期化する
@@ -169,7 +173,8 @@ class Game
 
     /// 意思表示に基づいて行動を行う
     void do_actions(Action[] actions)
-      in {
+      in
+      {
         assert(actions.length == this.agents.length);
       }
     do
@@ -238,6 +243,7 @@ class Game
           this.owners[y][x] = Team.NO;
         }
       }
+      this.turn++;
     }
 
     /// 現時点でのチームの点数を返す
