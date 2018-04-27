@@ -278,6 +278,7 @@ class Game
             int tmp_score = this.panels[y][x];
             bool flag = true;  // falseになったら囲めてない
             int[][] q = [];  // 探索予定場所のqueue
+            q ~= [x, y];
             foreach (i; 0..4) {
               q ~= [x + dx[i], y + dy[i]];
             }
