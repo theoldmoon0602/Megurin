@@ -89,7 +89,7 @@ class Game
     /// パネルの点数を初期化する
     void set_points(ref Random rng)
     {
-      foreach (y; 0..this.h_size) {
+      foreach (y; 0..(this.h_size + 1) / 2) {
         foreach (x; 0..((this.w_size + 1) / 2)) {
           int point = 0;
           if (dice(rng, 1, 1) == 0) {
@@ -100,7 +100,9 @@ class Game
           }
 
           this.panels[y][x] = point;
+          this.panels[this.h_size - y - 1][x] = point;
           this.panels[y][this.w_size - x - 1] = point;
+          this.panels[this.h_size - y - 1][this.w_size - x - 1] = point;
         }
       }
     }
@@ -151,7 +153,7 @@ class Game
         agent3 = new Agent(Team.B, w_size - x, y);
       }
       else {
-        agent3 = new Agent(Team.B, x,h_size - y);
+        agent3 = new Agent(Team.B, w_size - x, h_size - y);
       }
 
       // 縦中央にいるとき横に並べる
@@ -165,7 +167,7 @@ class Game
         agent4 = new Agent(Team.B, w_size - x2, y2);
       }
       else {
-        agent4 = new Agent(Team.B, x2, h_size - y2);
+        agent4 = new Agent(Team.B, w_size - x2, h_size - y2);
       }
 
       this.agents = [agent, agent2, agent3, agent4];
