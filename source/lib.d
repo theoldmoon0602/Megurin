@@ -277,13 +277,10 @@ class Game
       foreach (y; 0..this.h_size) {
         foreach (x; 0..this.w_size) {
           if (this.owners[y][x] == Team.NO && flags[y][x] == 0) {
-            int tmp_score = this.panels[y][x];
+            int tmp_score = 0;
             bool flag = true;  // falseになったら囲めてない
             int[][] q = [];  // 探索予定場所のqueue
             q ~= [x, y];
-            foreach (i; 0..4) {
-              q ~= [x + dx[i], y + dy[i]];
-            }
 
             while (q.length > 0) {
               auto p = q.front;
@@ -292,7 +289,7 @@ class Game
               auto y2 = p[1];
               if (x2 < 0 || this.w_size <= x2 || y2 < 0 || this.h_size <= y2) {
                 flag = false;
-                break;
+                continue;
               }
               if (flags[y2][x2] != 0) {
                 continue;
@@ -312,6 +309,8 @@ class Game
             }
             if (flag) {
               score += tmp_score;
+              import std.stdio;
+              debug stderr.writefln("x(%d, %d) -> %d", x, y, tmp_score);
             }
 
           }

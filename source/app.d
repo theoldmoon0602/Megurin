@@ -91,7 +91,9 @@ void main()
   game.set_points(rng);
   game.set_agents(rng);
 
+  while (true) {
   show_game(game);
   do_game(game);
-  show_game(game);
+  }
+
 }
